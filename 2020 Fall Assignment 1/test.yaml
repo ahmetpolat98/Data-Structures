@@ -1,0 +1,112 @@
+- _define:
+    vars:
+    prompt: 
+
+- init:
+    run: rm -f app
+    blocker: true
+
+- compile1:
+    run: g++ -c -std=c++11 -Wall -Werror counter.cpp -o counter.o  # timeout: 8
+    points: 20
+
+- compile_as_tolerated:
+    run: g++ -c  -std=c++11 counter.cpp -o counter.o  # timeout: 8
+    bloker: true
+
+- compile2:
+    run: g++ -c  -std=c++11 -Wall -Werror main.cpp -o main.o  # timeout: 60
+    blocker: true
+
+- link:
+    run: g++ counter.o main.o -o app  # timeout: 8
+    blocker: true
+
+- check_counter_case1:
+    run: ./app
+    points: 10
+    script:
+        - expect: ".*Enter a choice .D,M,E.:\\s+" # timeout: 8
+        - send: "D"
+        - expect: "Token : " #timeout: 8
+        - send: "05"
+        - expect: "05 1\\s+.*Enter a choice .D,M,E.:\\s+" #timeout: 8
+        - send: "E"
+        - expect: ".*you sure you want to exit the .*:" #timeout: 8
+        - send: "Y"
+        - expect: _EOF_
+    exit: 0
+    
+- check_counter_case2:
+    run: ./app
+    points: 10
+    script:
+        - expect: ".*Enter a choice .D,M,E.:\\s+" # timeout: 8
+        - send: "D"
+        - expect: "Token : " #timeout: 8
+        - send: "28"
+        - expect: "28 3\\s+.*Enter a choice .D,M,E.:\\s+" #timeout: 8
+        - send: "E"
+        - expect: ".*you sure you want to exit the .*:" #timeout: 8
+        - send: "Y"
+        - expect: _EOF_
+    exit: 0
+    
+    
+- check_counter_case3:
+    run: ./app
+    points: 10
+    script:
+        - expect: ".*Enter a choice .D,M,E.:\\s+" # timeout: 8
+        - send: "D"
+        - expect: "Token : " #timeout: 8
+        - send: "19"
+        - expect: "19 1\\s+.*Enter a choice .D,M,E.:\\s+" #timeout: 8
+        - send: "E"
+        - expect: ".*you sure you want to exit the .*:" #timeout: 8
+        - send: "Y"
+        - expect: _EOF_
+    exit: 0
+ 
+- check_counter_case4:
+    run: ./app
+    points: 10
+    script:
+        - expect: ".*Enter a choice .D,M,E.:\\s+" # timeout: 8
+        - send: "D"
+        - expect: "Token : " #timeout: 8
+        - send: "79"
+        - expect: "79 3\\s+.*Enter a choice .D,M,E.:\\s+" #timeout: 8
+        - send: "E"
+        - expect: ".*you sure you want to exit the .*:" #timeout: 8
+        - send: "Y"
+        - expect: _EOF_
+    exit: 0
+    
+- check_counter_case5:
+    run: ./app
+    points: 10
+    script:
+        - expect: ".*Enter a choice .D,M,E.:\\s+" # timeout: 8
+        - send: "D"
+        - expect: "Token : " #timeout: 8
+        - send: "3."
+        - expect: "There is no\\s+.*Enter a choice .D,M,E.:\\s+" #timeout: 8
+        - send: "E"
+        - expect: ".*you sure you want to exit the .*:" #timeout: 8
+        - send: "Y"
+        - expect: _EOF_
+    exit: 0
+
+- check_finding_most_common:
+    run: ./app
+    points: 30
+    script:
+        - expect: ".*Enter a choice .D,M,E.:\\s+" # timeout: 8
+        - send: "M"
+        - expect: ".*62 4.*.. 3.*.. 3.*Enter a choice .D,M,E.:\\s+" #timeout: 8
+        - send: "E"
+        - expect: ".*you sure you want to exit the .*:" #timeout: 8
+        - send: "Y"
+        - expect: _EOF_
+    exit: 0
